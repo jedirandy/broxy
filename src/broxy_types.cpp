@@ -4,8 +4,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-#include "broxy_types.h"
-
+#include "../src/broxy_types.h"
 #include <algorithm>
 #include <ostream>
 

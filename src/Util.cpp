@@ -5,18 +5,11 @@
  *      Author: sheng
  */
 
-#include "Util.h"
+#include "../src/Util.h"
 
 /*
  * Curl helper class
  */
-Curl::Curl() {
-	this->curl = curl_easy_init();
-}
-
-Curl::~Curl() {
-	curl_easy_cleanup(this->curl);
-}
 
 // Callback called when a chunk is received
 static size_t cb(void *buffer, size_t size, size_t nmemb, void *userp) {
@@ -24,10 +17,19 @@ static size_t cb(void *buffer, size_t size, size_t nmemb, void *userp) {
 	return size * nmemb;
 }
 
+Curl::Curl() {
+	this->curl = curl_easy_init();
+	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+	curl_easy_setopt(this->curl, CURLOPT_WRITEFUNCTION, cb);
+}
+
+Curl::~Curl() {
+	curl_easy_cleanup(this->curl);
+}
+
 std::string Curl::get(std::string url) {
 	std::string buf;
 	curl_easy_setopt(this->curl, CURLOPT_URL, url.c_str());
-	curl_easy_setopt(this->curl, CURLOPT_WRITEFUNCTION, cb);
 	curl_easy_setopt(this->curl, CURLOPT_WRITEDATA, &buf);
 	curl_easy_perform(this->curl);
 	return buf;
@@ -46,8 +48,9 @@ bool Cache::add(string url, string data) {
 bool Cache::remove(string url) {
 	auto element = cache_map.find(url);
 	if (element != cache_map.end()) {
-		cache_map.erase(url);
+		cout<< "removing " << url << endl;
 		this->size += element->second.size();
+		cache_map.erase(url);
 		return true;
 	}
 	// not found
@@ -84,6 +87,7 @@ FIFOCache::FIFOCache(size_t max_size) {
 }
 
 FIFOCache::~FIFOCache() {
+	this->list.clear();
 }
 
 string FIFOCache::fetch(string url) {

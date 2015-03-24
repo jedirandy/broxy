@@ -3,8 +3,8 @@
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
-#include "Service.h"
 #include <chrono>
+#include "../src/Service.h"
 
 using namespace std;
 using namespace apache::thrift;

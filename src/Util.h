@@ -5,8 +5,8 @@
  *      Author: sheng
  */
 // Curl wrapper
-#ifndef GEN_CPP_UTIL_H_
-#define GEN_CPP_UTIL_H_
+#ifndef SRC_UTIL_H_
+#define SRC_UTIL_H_
 
 #include <curl/curl.h>
 #include <memory>
@@ -66,4 +66,16 @@ public:
 	bool free(size_t input_size);
 };
 
-#endif /* GEN_CPP_UTIL_H_ */
+/*
+ * LRUCache
+ */
+class LRUCache: public Cache {
+private:
+	std::list<std::string> list;
+public:
+	LRUCache();
+	LRUCache(size_t max_size);
+	virtual ~LRUCache();
+};
+
+#endif /* SRC_UTIL_H_ */

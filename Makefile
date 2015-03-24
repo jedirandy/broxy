@@ -7,7 +7,7 @@ LIBS =		-lthrift -lcurl
 
 TARGET =	broxy
 
-SRC_DIR = gen-cpp/
+SRC_DIR = src/
 
 DEP = $(SRC_DIR)broxy_constants.cpp $(SRC_DIR)broxy_types.cpp $(SRC_DIR)Service.cpp
 
