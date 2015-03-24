@@ -4,7 +4,7 @@
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
 #include <chrono>
-#include "../src/Service.h"
+#include "Service.h"
 
 using namespace std;
 using namespace apache::thrift;

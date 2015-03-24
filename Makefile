@@ -13,7 +13,7 @@ DEP = $(SRC_DIR)broxy_constants.cpp $(SRC_DIR)broxy_types.cpp $(SRC_DIR)Service.
 
 CLIENT_SRC = $(SRC_DIR)Service_client.cpp
 
-SERVER_SRC = $(SRC_DIR)Service_server.cpp $(SRC_DIR)Util.cpp
+SERVER_SRC = $(SRC_DIR)Service_server.cpp $(SRC_DIR)Util.cpp $(SRC_DIR)Cache.cpp
 
 LD_FLAGS = "-Wl,-rpath,/usr/local/lib/"
 

@@ -7,8 +7,9 @@
 #include <thrift/transport/TBufferTransports.h>
 #include <curl/curl.h>
 
-#include "../src/Service.h"
-#include "../src/Util.h"
+#include "Service.h"
+#include "Util.h"
+#include "Cache.h"
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;

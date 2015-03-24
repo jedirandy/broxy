@@ -7,7 +7,7 @@
 #ifndef broxy_CONSTANTS_H
 #define broxy_CONSTANTS_H
 
-#include "../src/broxy_types.h"
+#include "broxy_types.h"
 
 namespace broxy {
 
