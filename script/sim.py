@@ -39,9 +39,6 @@ def run(program, host, input, output, num_samples, pattern):
 			weights = []
 			for i in range(1, len(rows) -1):
 				weights.append(float(rows[i][2]))
-		if (pattern == 'gauss'):
-			# shuffle list
-			random.shuffle(rows)
 
 		# begin sampling
 		for i in range(1, num_samples + 1):
