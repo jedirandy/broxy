@@ -70,8 +70,8 @@ std::string Cache::get_stats() {
 			+ std::to_string(stats.requests) + "\n"
 			+ "hit rate: " + std::to_string(stats.get_rate()) + "\n"
 			+ "number of cached elements: " + std::to_string(cache_map.size()) + "\n"
-			+ "available/total size: " + std::to_string(size) + "/"
-			+ std::to_string(max_size);
+			+ "available/total size: " + std::to_string(size/KB) + "/"
+			+ std::to_string(max_size/KB) + " KBytes\n";
 }
 
 void Cache::debug_info(bool is_hit) {
@@ -212,6 +212,13 @@ bool MAXSCache::free(size_t input_size) {
 		pq.pop();
 	}
 	return true;
+}
+
+std::string MAXSCache::get_stats() {
+	std::string stats = Cache::get_stats();
+	if (!pq.empty())
+		stats += "largest size item: " + pq.top().url + "\n";
+	return stats;
 }
 
 /*

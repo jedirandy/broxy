@@ -14,6 +14,7 @@ Curl::Curl() {
 	this->curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(this->curl, CURLOPT_WRITEFUNCTION, cb);
+	curl_easy_setopt(curl, CURLOPT_TIMEOUT, CURL_TIMEOUT);
 }
 
 Curl::~Curl() {

@@ -10,6 +10,9 @@
 #include <algorithm>
 #include "Util.h"
 
+#define MB 1024*1024
+#define KB 1024
+
 using namespace std;
 
 enum CachePolicy {
@@ -21,6 +24,7 @@ enum CachePolicy {
 	NUM_OF_POLICIES
 };
 
+// convert policy to string
 std::string policy_to_string(CachePolicy p);
 
 class Cache {
@@ -100,6 +104,8 @@ public:
 
 	std::string fetch(const std::string& url) override;
 	bool free(size_t input_size);
+
+	virtual std::string get_stats() override;
 };
 
 /*

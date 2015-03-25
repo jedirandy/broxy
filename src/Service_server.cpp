@@ -59,7 +59,7 @@ public:
 		cout << "client is requesting " << req.url << endl;
 		auto buf = cache->fetch(req.url);
 		auto end = std::chrono::system_clock::now();
-		cout << chrono::duration<double, milli>(end - start).count() << " ms" << endl;
+		cout << "request fulfilled " << chrono::duration<double, milli>(end - start).count() << " ms" << endl;
 		res.code = 200;
 		res.body = buf;
 		_return = res;
@@ -70,6 +70,7 @@ int main(int argc, char **argv) {
 	int port = 9090;
 	CachePolicy policy = FIFO;
 	size_t cache_size = 0;
+
 	if (argc != 3) {
 		cout << "args: policy cache_size" << endl;
 		return EXIT_FAILURE;
@@ -85,8 +86,9 @@ int main(int argc, char **argv) {
 			return EXIT_FAILURE;
 		}
 	}
+
 	boost::shared_ptr<ServiceHandler> handler(
-			new ServiceHandler(policy, cache_size));
+			new ServiceHandler(policy, cache_size * MB));
 	boost::shared_ptr<TProcessor> processor(new ServiceProcessor(handler));
 	boost::shared_ptr<TServerTransport> serverTransport(
 			new TServerSocket(port));
@@ -98,7 +100,7 @@ int main(int argc, char **argv) {
 	TSimpleServer server(processor, serverTransport, transportFactory,
 			protocolFactory);
 	cout << "Server started, policy: " << policy_to_string(policy)
-			<< " cache size: " << cache_size << " Bytes" << endl;
+			<< " cache size: " << handler->cache->available() / KB << " KBytes" << endl;
 	server.serve();
 	return EXIT_SUCCESS;
 }

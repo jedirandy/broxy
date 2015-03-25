@@ -13,6 +13,8 @@
 #include <iostream>
 #include <random>
 
+#define CURL_TIMEOUT 5L // timeout in seconds
+
 using namespace std;
 // Curl helper class
 class Curl {
