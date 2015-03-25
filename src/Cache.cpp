@@ -85,7 +85,6 @@ bool FIFOCache::free(size_t input_size) {
 		return true;
 	}
 	while (!can_fit_in(input_size)) {
-		// clean up elements until available space
 		remove(list.front());
 		list.pop_front();
 	}
@@ -132,7 +131,6 @@ bool LRUCache::free(size_t input_size) {
 		return true;
 	}
 	while (!can_fit_in(input_size)) {
-		// clean up elements until available space
 		remove(deque.back());
 		deque.pop_back();
 	}
@@ -179,9 +177,52 @@ bool MAXSCache::free(size_t input_size) {
 		return true;
 	}
 	while (!can_fit_in(input_size)) {
-		// clean up elements until available space
 		remove(pq.top().url);
 		pq.pop();
 	}
 	return true;
 }
+
+/*
+ * Random Cache
+ */
+RandomCache::RandomCache(size_t max_size): Cache(max_size), randomGenerator() {
+}
+
+RandomCache::~RandomCache() {
+}
+
+std::string RandomCache::fetch(const string& url) {
+	string result;
+	result = find(url);
+	if (result.empty()) {
+		cout << "Cache miss" << endl;
+		result = this->curl.get(url);
+		if (free(result.size())) {
+			// update cache map
+			add(url, result);
+			// add
+			list.push_back(url);
+		}
+	} else {
+		cout << "Cache hit" << endl;
+	}
+	return result;
+}
+
+bool RandomCache::free(size_t input_size) {
+	if (input_size > this->max_size)
+		return false;
+	if (input_size < this->size) {
+		return true;
+	}
+	while (!can_fit_in(input_size)) {
+		auto iter = list.begin();
+		int index = randomGenerator.get_number(0, list.size() - 1);
+		std::advance(iter, index);
+		remove(*iter);
+		list.erase(iter);
+	}
+	return true;
+}
+

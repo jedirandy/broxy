@@ -42,3 +42,16 @@ void Stats::count_total() {
 double Stats::get_rate() {
 	return (double)hits/(double)requests;
 }
+
+/*
+ * Random generator
+ */
+RandomGenerator::RandomGenerator() {
+	std::random_device rd;
+	mt.seed(rd());
+}
+
+int RandomGenerator::get_number(int from, int to) {
+	std::uniform_int_distribution<int> dist(from, to);
+	return dist(mt);
+}

@@ -11,6 +11,7 @@
 #include <curl/curl.h>
 #include <string>
 #include <iostream>
+#include <random>
 
 using namespace std;
 // Curl helper class
@@ -36,6 +37,16 @@ public:
 	void count_hit();
 	void count_total();
 	double get_rate();
+};
+
+// Random generator
+class RandomGenerator {
+private:
+	mt19937 mt;
+public:
+	RandomGenerator();
+	virtual ~RandomGenerator(){};
+	int get_number(int from, int to);
 };
 
 #endif /* SRC_UTIL_H_ */

@@ -16,6 +16,7 @@ enum CachePolicy {
 	FIFO = 1,
 	LRU = 2,
 	MAXS = 3,
+	RANDOM = 4,
 };
 
 class Cache {
@@ -90,6 +91,21 @@ private:
 public:
 	MAXSCache(size_t max_size);
 	virtual ~MAXSCache();
+
+	std::string fetch(const std::string& url) override;
+	bool free(size_t input_size);
+};
+
+/*
+ * Random Cache
+ */
+class RandomCache: public Cache {
+private:
+	std::list<std::string> list;
+	RandomGenerator randomGenerator;
+public:
+	RandomCache(size_t max_size);
+	virtual ~RandomCache();
 
 	std::string fetch(const std::string& url) override;
 	bool free(size_t input_size);

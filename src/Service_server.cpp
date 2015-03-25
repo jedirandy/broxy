@@ -35,6 +35,9 @@ public:
 		case MAXS:
 			cache.reset(new MAXSCache(cache_size));
 			break;
+		case RANDOM:
+			cache.reset(new RandomCache(cache_size));
+			break;
 		}
 	}
 
@@ -42,7 +45,6 @@ public:
 	}
 
 	void get(Response& _return, const Request& req) {
-		// Your implementation goes here
 		cout << "client is requesting " << req.url << endl;
 		Response res;
 		cout << "cache available size: " << cache->available() << endl;
@@ -58,7 +60,7 @@ int main(int argc, char **argv) {
 	CachePolicy policy = FIFO;
 	size_t cache_size = 0;
 	if (argc != 3) {
-		cout<<"args: policy cache_size"<<endl;
+		cout << "args: policy cache_size" << endl;
 		return EXIT_FAILURE;
 	} else {
 		policy = (CachePolicy) atoi(argv[1]);
