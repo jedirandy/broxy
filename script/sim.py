@@ -59,6 +59,7 @@ def run(program, host, input, output, num_samples, pattern):
 			result.append([rank, url, time])
 	with open(output, 'w') as f:
 		writer = csv.writer(f)
+		writer.writerow(['Rank', 'URL', 'Latency'])
 		for r in result:
 			writer.writerow(r)
 	print output + ' generated'
