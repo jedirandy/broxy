@@ -3,6 +3,7 @@ import csv
 import random
 import subprocess
 import argparse
+import time
 
 # sample by weight
 def weighted_sample(weights):
@@ -37,7 +38,7 @@ def run(program, host, input, output, num_samples, pattern):
 		if (pattern == 'weighted'):
 			weights = []
 			for i in range(1, len(rows) -1):
-				weights.append(rows[i][2])
+				weights.append(float(rows[i][2]))
 		if (pattern == 'gauss'):
 			# shuffle list
 			random.shuffle(rows)
@@ -72,7 +73,11 @@ def main():
 	parser.add_argument('--program', dest='program', default='../client', help='program path')
 	args = parser.parse_args()
 
+	print 'running'
+	start = time.time()
 	run(args.program, args.host, args.input, args.output, args.samples, args.pattern)
+	end = time.time()
+	print 'elapsed time: ', round(end - start, 3), 'seconds'
 
 if __name__ == '__main__':
 	main()
