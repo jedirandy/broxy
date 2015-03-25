@@ -11,6 +11,7 @@
 #include "Service.h"
 #include "Util.h"
 #include "Cache.h"
+#include <chrono>
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -38,6 +39,8 @@ public:
 		case RANDOM:
 			cache.reset(new RandomCache(cache_size));
 			break;
+		default:
+			break;
 		}
 	}
 
@@ -45,10 +48,18 @@ public:
 	}
 
 	void get(Response& _return, const Request& req) {
-		cout << "client is requesting " << req.url << endl;
 		Response res;
-		cout << "cache available size: " << cache->available() << endl;
+		if (req.url == "@stats") {
+			res.code = 200;
+			res.body = cache->get_stats();
+			_return = res;
+			return;
+		}
+		auto start = std::chrono::system_clock::now();
+		cout << "client is requesting " << req.url << endl;
 		auto buf = cache->fetch(req.url);
+		auto end = std::chrono::system_clock::now();
+		cout << chrono::duration<double, milli>(end - start).count() << " ms" << endl;
 		res.code = 200;
 		res.body = buf;
 		_return = res;
@@ -65,6 +76,14 @@ int main(int argc, char **argv) {
 	} else {
 		policy = (CachePolicy) atoi(argv[1]);
 		cache_size = atoi(argv[2]);
+		if (policy >= NUM_OF_POLICIES || policy <= ZERO_POLICY) {
+			cout << "invalid policy" << endl;
+			return EXIT_FAILURE;
+		}
+		if (cache_size < 0) {
+			cout << "invalid cache size" << endl;
+			return EXIT_FAILURE;
+		}
 	}
 	boost::shared_ptr<ServiceHandler> handler(
 			new ServiceHandler(policy, cache_size));
@@ -78,8 +97,8 @@ int main(int argc, char **argv) {
 
 	TSimpleServer server(processor, serverTransport, transportFactory,
 			protocolFactory);
-	cout << "Server started, policy: " << policy << " cache size: "
-			<< cache_size << " bytes" << endl;
+	cout << "Server started, policy: " << policy_to_string(policy)
+			<< " cache size: " << cache_size << " Bytes" << endl;
 	server.serve();
 	return EXIT_SUCCESS;
 }

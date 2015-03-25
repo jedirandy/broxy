@@ -1,5 +1,20 @@
 #include "Cache.h"
 
+std::string policy_to_string(CachePolicy p) {
+	switch(p) {
+	case FIFO:
+		return "FIFO";
+	case LRU:
+		return "LRU";
+	case MAXS:
+		return "MAXS";
+	case RANDOM:
+		return "Random";
+	default:
+		return "N/A";
+	}
+}
+
 /*
  * Cache abstract class
  */
@@ -17,7 +32,9 @@ bool Cache::add(const string& url, const string& data) {
 bool Cache::remove(const string& url) {
 	auto element = cache_map.find(url);
 	if (element != cache_map.end()) {
+#ifdef _DEBUG
 		cout << "removing " << url << endl;
+#endif
 		this->size += element->second.size();
 		cache_map.erase(url);
 		return true;
@@ -48,6 +65,22 @@ size_t Cache::available() {
 	return this->size;
 }
 
+std::string Cache::get_stats() {
+	return "hits/total: " + std::to_string(stats.hits) + "/"
+			+ std::to_string(stats.requests) + "\n"
+			+ "hit rate: " + std::to_string(stats.get_rate()) + "\n"
+			+ "number of cached elements: " + std::to_string(cache_map.size()) + "\n"
+			+ "available/total size: " + std::to_string(size) + "/"
+			+ std::to_string(max_size);
+}
+
+void Cache::debug_info(bool is_hit) {
+	if (is_hit) {
+		cout << "Cache hit" << endl;
+	} else {
+		cout << "Cache miss" << endl;
+	}
+}
 /*
  * FIFO Class
  */
@@ -62,8 +95,10 @@ FIFOCache::~FIFOCache() {
 std::string FIFOCache::fetch(const std::string& url) {
 	string result;
 	result = find(url);
+#ifdef _DEBUG
+	debug_info(!result.empty());
+#endif
 	if (result.empty()) {
-		cout << "Cache miss" << endl;
 		result = this->curl.get(url);
 		if (free(result.size())) {
 			// update cache
@@ -71,10 +106,7 @@ std::string FIFOCache::fetch(const std::string& url) {
 			// add to the queue
 			list.push_back(url);
 		}
-	} else {
-		cout << "Cache hit" << endl;
 	}
-	cout << stats.get_rate() << endl;
 	return result;
 }
 
@@ -104,8 +136,10 @@ LRUCache::~LRUCache() {
 string LRUCache::fetch(const string& url) {
 	string result;
 	result = find(url);
+#ifdef _DEBUG
+	debug_info(!result.empty());
+#endif
 	if (result.empty()) {
-		cout << "Cache miss" << endl;
 		result = this->curl.get(url);
 		if (free(result.size())) {
 			// update cache
@@ -119,8 +153,8 @@ string LRUCache::fetch(const string& url) {
 		auto copy = *i;
 		deque.erase(i);
 		deque.push_front(copy);
-		cout << "Cache hit" << endl;
 	}
+
 	return result;
 }
 
@@ -150,8 +184,10 @@ MAXSCache::~MAXSCache() {
 std::string MAXSCache::fetch(const string& url) {
 	string result;
 	result = find(url);
+#ifdef _DEBUG
+	debug_info(!result.empty());
+#endif
 	if (result.empty()) {
-		cout << "Cache miss" << endl;
 		result = this->curl.get(url);
 		if (free(result.size())) {
 			// update cache
@@ -161,12 +197,7 @@ std::string MAXSCache::fetch(const string& url) {
 			Entity e(url, size);
 			pq.push(e);
 		}
-	} else {
-		cout << "Cache hit" << endl;
 	}
-	cout << stats.get_rate() << endl;
-	if (!pq.empty())
-		cout << "top " << pq.top().url << endl;
 	return result;
 }
 
@@ -186,7 +217,8 @@ bool MAXSCache::free(size_t input_size) {
 /*
  * Random Cache
  */
-RandomCache::RandomCache(size_t max_size): Cache(max_size), randomGenerator() {
+RandomCache::RandomCache(size_t max_size) :
+		Cache(max_size), randomGenerator() {
 }
 
 RandomCache::~RandomCache() {
@@ -195,8 +227,10 @@ RandomCache::~RandomCache() {
 std::string RandomCache::fetch(const string& url) {
 	string result;
 	result = find(url);
+#ifdef _DEBUG
+	debug_info(!result.empty());
+#endif
 	if (result.empty()) {
-		cout << "Cache miss" << endl;
 		result = this->curl.get(url);
 		if (free(result.size())) {
 			// update cache map
@@ -204,8 +238,6 @@ std::string RandomCache::fetch(const string& url) {
 			// add
 			list.push_back(url);
 		}
-	} else {
-		cout << "Cache hit" << endl;
 	}
 	return result;
 }

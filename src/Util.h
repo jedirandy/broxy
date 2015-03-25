@@ -27,10 +27,10 @@ public:
 
 // Stats helper class
 class Stats {
-private:
+public:
 	uint32_t hits;
 	uint32_t requests;
-public:
+
 	Stats(): hits(0), requests(0) {};
 	virtual ~Stats() {};
 

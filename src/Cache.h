@@ -13,11 +13,15 @@
 using namespace std;
 
 enum CachePolicy {
+	ZERO_POLICY,
 	FIFO = 1,
 	LRU = 2,
 	MAXS = 3,
 	RANDOM = 4,
+	NUM_OF_POLICIES
 };
+
+std::string policy_to_string(CachePolicy p);
 
 class Cache {
 protected:
@@ -32,12 +36,14 @@ protected:
 	virtual string find(const string& url);
 
 	virtual bool can_fit_in(size_t input_size);
+	virtual void debug_info(bool is_hit);
 public:
 	Cache(size_t max_size);
 	virtual ~Cache() {};
 
 	virtual std::string fetch(const std::string& url) = 0;
 	virtual size_t available();
+	virtual std::string get_stats();
 };
 
 /*
