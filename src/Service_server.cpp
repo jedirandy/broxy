@@ -6,6 +6,7 @@
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
 #include <curl/curl.h>
+#include <boost/program_options.hpp>
 
 #include "Service.h"
 #include "Util.h"
@@ -22,14 +23,22 @@ using namespace ::broxy;
 
 class ServiceHandler: virtual public ServiceIf {
 public:
-	Cache* cache;
-	ServiceHandler() {
-		// init
-		cache = new FIFOCache(128 * 1024);
+	std::shared_ptr<Cache> cache;
+	ServiceHandler(CachePolicy policy, size_t cache_size) {
+		switch (policy) {
+		case FIFO:
+			cache.reset(new FIFOCache(cache_size));
+			break;
+		case LRU:
+			cache.reset(new LRUCache(cache_size));
+			break;
+		case MAXS:
+			cache.reset(new MAXSCache(cache_size));
+			break;
+		}
 	}
 
 	~ServiceHandler() {
-		delete cache;
 	}
 
 	void get(Response& _return, const Request& req) {
@@ -46,7 +55,17 @@ public:
 
 int main(int argc, char **argv) {
 	int port = 9090;
-	boost::shared_ptr<ServiceHandler> handler(new ServiceHandler());
+	CachePolicy policy = FIFO;
+	size_t cache_size = 0;
+	if (argc != 3) {
+		cout<<"args: policy cache_size"<<endl;
+		return EXIT_FAILURE;
+	} else {
+		policy = (CachePolicy) atoi(argv[1]);
+		cache_size = atoi(argv[2]);
+	}
+	boost::shared_ptr<ServiceHandler> handler(
+			new ServiceHandler(policy, cache_size));
 	boost::shared_ptr<TProcessor> processor(new ServiceProcessor(handler));
 	boost::shared_ptr<TServerTransport> serverTransport(
 			new TServerSocket(port));
@@ -57,8 +76,9 @@ int main(int argc, char **argv) {
 
 	TSimpleServer server(processor, serverTransport, transportFactory,
 			protocolFactory);
-	cout << "Server started" << endl;
+	cout << "Server started, policy: " << policy << " cache size: "
+			<< cache_size << " bytes" << endl;
 	server.serve();
-	return 0;
+	return EXIT_SUCCESS;
 }
 

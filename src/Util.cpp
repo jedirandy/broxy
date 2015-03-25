@@ -27,3 +27,18 @@ std::string Curl::get(std::string url) {
 	curl_easy_perform(this->curl);
 	return buf;
 }
+
+/*
+ * Stats helper
+ */
+void Stats::count_hit() {
+	this->hits++;
+}
+
+void Stats::count_total() {
+	this->requests++;
+}
+
+double Stats::get_rate() {
+	return (double)hits/(double)requests;
+}

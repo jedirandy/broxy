@@ -20,15 +20,15 @@ int main(int argc, char** argv) {
 
 	ServiceClient client(protocol);
 
+	// todo
+	// check arguments
+
 	try {
-		transport->open();
-
-		auto start = std::chrono::system_clock::now();
 		Request req;
-//		req.url = "www.google.com";
-
-		req.url = std::string(argv[1]);
 		Response res;
+		req.url = std::string(argv[1]);
+		transport->open();
+		auto start = std::chrono::system_clock::now();
 		client.get(res, req);
 		auto end = std::chrono::system_clock::now();
 		cout << chrono::duration <double, milli> (end - start).count() << " ms" << endl;

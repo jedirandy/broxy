@@ -9,7 +9,7 @@
 
 #include <thrift/TDispatchProcessor.h>
 
-#include "../src/broxy_types.h"
+#include "broxy_types.h"
 
 namespace broxy {
 

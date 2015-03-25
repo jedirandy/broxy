@@ -3,17 +3,21 @@
 /*
  * Cache abstract class
  */
-bool Cache::add(string url, string data) {
+Cache::Cache(size_t max_size) :
+		cache_map(), max_size(max_size), size(max_size), curl(), stats() {
+}
+
+bool Cache::add(const string& url, const string& data) {
 	std::pair<string, string> kv(url, data);
 	this->cache_map.insert(kv);
 	this->size -= data.size();
 	return true;
 }
 
-bool Cache::remove(string url) {
+bool Cache::remove(const string& url) {
 	auto element = cache_map.find(url);
 	if (element != cache_map.end()) {
-		cout<< "removing " << url << endl;
+		cout << "removing " << url << endl;
 		this->size += element->second.size();
 		cache_map.erase(url);
 		return true;
@@ -22,11 +26,15 @@ bool Cache::remove(string url) {
 	return false;
 }
 
-string Cache::find(string url) {
+string Cache::find(const string& url) {
 	string result;
 	auto element = cache_map.find(url);
-	if (element != cache_map.end())
+	stats.count_total();
+	if (element != cache_map.end()) {
+		// hit
+		stats.count_hit();
 		result = element->second;
+	}
 	return result;
 }
 
@@ -43,19 +51,15 @@ size_t Cache::available() {
 /*
  * FIFO Class
  */
-FIFOCache::FIFOCache() {
-}
-
-FIFOCache::FIFOCache(size_t max_size) {
-	this->max_size = max_size;
-	this->size = max_size;
+FIFOCache::FIFOCache(size_t max_size) :
+		Cache(max_size) {
 }
 
 FIFOCache::~FIFOCache() {
 	this->list.clear();
 }
 
-string FIFOCache::fetch(string url) {
+std::string FIFOCache::fetch(const std::string& url) {
 	string result;
 	result = find(url);
 	if (result.empty()) {
@@ -70,6 +74,7 @@ string FIFOCache::fetch(string url) {
 	} else {
 		cout << "Cache hit" << endl;
 	}
+	cout << stats.get_rate() << endl;
 	return result;
 }
 
@@ -79,10 +84,74 @@ bool FIFOCache::free(size_t input_size) {
 	if (input_size < this->size) {
 		return true;
 	}
-	while(!can_fit_in(input_size)) {
+	while (!can_fit_in(input_size)) {
 		// clean up elements until available space
 		remove(list.front());
 		list.pop_front();
+	}
+	return true;
+}
+
+/*
+ * LRU Cache
+ */
+LRUCache::LRUCache(size_t max_size) :
+		Cache(max_size) {
+}
+
+LRUCache::~LRUCache() {
+}
+
+string LRUCache::fetch(const string& url) {
+	string result;
+
+	return result;
+}
+
+
+/*
+ * MAXS Cache
+ */
+MAXSCache::MAXSCache(size_t max_size) :
+		Cache(max_size) {
+}
+
+MAXSCache::~MAXSCache() {
+}
+
+std::string MAXSCache::fetch(const string& url) {
+	string result;
+	result = find(url);
+	if (result.empty()) {
+		cout << "Cache miss" << endl;
+		result = this->curl.get(url);
+		if (free(result.size())) {
+			// update cache
+			add(url, result);
+			// add to the priority queue
+			size_t size = result.size();
+			Entity e(url, size);
+			pq.push(e);
+		}
+	} else {
+		cout << "Cache hit" << endl;
+	}
+	cout << stats.get_rate() << endl;
+	if (!pq.empty())
+		cout << "top " << pq.top().url << endl;
+	return result;
+}
+
+bool MAXSCache::free(size_t input_size) {
+	if (input_size > this->max_size)
+		return false;
+	if (input_size < this->size) {
+		return true;
+	}
+	while (!can_fit_in(input_size)) {
+		// clean up elements until available space
+		remove(pq.top().url);
+		pq.pop();
 	}
 	return true;
 }

@@ -24,4 +24,18 @@ public:
 	std::string get(std::string url);
 };
 
+// Stats helper class
+class Stats {
+private:
+	uint32_t hits;
+	uint32_t requests;
+public:
+	Stats(): hits(0), requests(0) {};
+	virtual ~Stats() {};
+
+	void count_hit();
+	void count_total();
+	double get_rate();
+};
+
 #endif /* SRC_UTIL_H_ */
