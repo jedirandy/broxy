@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <list>
 #include <queue>
+#include <deque>
+#include <algorithm>
 #include "Util.h"
 
 using namespace std;
@@ -56,12 +58,13 @@ public:
  */
 class LRUCache: public Cache {
 private:
-	std::list<std::string> list;
+	std::deque<std::string> deque;
 public:
 	LRUCache(size_t max_size);
 	virtual ~LRUCache();
 
 	std::string fetch(const std::string& url) override;
+	bool free(size_t input_size);
 };
 
 /*

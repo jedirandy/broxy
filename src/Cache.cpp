@@ -104,10 +104,40 @@ LRUCache::~LRUCache() {
 
 string LRUCache::fetch(const string& url) {
 	string result;
-
+	result = find(url);
+	if (result.empty()) {
+		cout << "Cache miss" << endl;
+		result = this->curl.get(url);
+		if (free(result.size())) {
+			// update cache
+			add(url, result);
+			// add to the queue
+			deque.push_front(url);
+		}
+	} else {
+		// update deque
+		auto i = std::find(deque.begin(), deque.end(), url);
+		auto copy = *i;
+		deque.erase(i);
+		deque.push_front(copy);
+		cout << "Cache hit" << endl;
+	}
 	return result;
 }
 
+bool LRUCache::free(size_t input_size) {
+	if (input_size > this->max_size)
+		return false;
+	if (input_size < this->size) {
+		return true;
+	}
+	while (!can_fit_in(input_size)) {
+		// clean up elements until available space
+		remove(deque.back());
+		deque.pop_back();
+	}
+	return true;
+}
 
 /*
  * MAXS Cache
