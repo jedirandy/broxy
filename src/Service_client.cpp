@@ -36,6 +36,7 @@ int main(int argc, char** argv) {
 		client.get(res, req);
 		auto end = std::chrono::system_clock::now();
 		cout << chrono::duration <double, milli> (end - start).count() << " ms" << endl;
+
 		if (req.url == "@stats") {
 			// print stats
 			cout << res.body << endl;
