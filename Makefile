@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -O2 -g -Wall -fmessage-length=0 -std=c++11
 OBJS = broxy.o
-LIBS = -lthrift -lcurl 
+LIBS = -lthrift -lcurl
 TARGET = client server
 SRC_DIR = src/
 DEP = $(SRC_DIR)broxy_constants.cpp $(SRC_DIR)broxy_types.cpp $(SRC_DIR)Service.cpp
