@@ -4,20 +4,21 @@
  * Curl helper class
  */
 
+// Callback when a chunk is received
+size_t cb(void *buffer, size_t size, size_t nmemb, void *userp) {
+	((std::string*) userp)->append((char*) buffer, size * nmemb);
+	return size * nmemb;
+}
+
 Curl::Curl() {
 	this->curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-	curl_easy_setopt(this->curl, CURLOPT_WRITEFUNCTION, this->callback);
+	curl_easy_setopt(this->curl, CURLOPT_WRITEFUNCTION, cb);
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT, CURL_TIMEOUT);
 }
 
 Curl::~Curl() {
 	curl_easy_cleanup(this->curl);
-}
-
-size_t Curl::callback(void *buffer, size_t size, size_t nmemb, void *userp) {
-	((std::string*) userp)->append((char*) buffer, size * nmemb);
-	return size * nmemb;
 }
 
 std::string Curl::get(std::string url) {
@@ -40,7 +41,7 @@ void Stats::count_total() {
 }
 
 double Stats::get_rate() {
-	return (double)hits/(double)requests;
+	return (double) hits / (double) requests;
 }
 
 /*

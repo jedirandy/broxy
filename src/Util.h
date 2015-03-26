@@ -20,8 +20,6 @@ using namespace std;
 class Curl {
 private:
 	CURL* curl;
-	// Callback when a chunk is received
-	size_t callback(void *buffer, size_t size, size_t nmemb, void *userp);
 public:
 	Curl();
 	virtual ~Curl();
