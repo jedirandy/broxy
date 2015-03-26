@@ -61,6 +61,7 @@ def run(program, host, input, output, num_samples, pattern):
 			writer.writerow(r)
 	print output + ' generated'
 
+
 def main():
 	parser = argparse.ArgumentParser(description='script')
 	parser.add_argument('--host', dest='host', default='localhost', help='host')
@@ -76,6 +77,8 @@ def main():
 	run(args.program, args.host, args.input, args.output, args.samples, args.pattern)
 	end = time.time()
 	print 'elapsed time: ', round(end - start, 3), 'seconds'
+	proc = subprocess.Popen(['aplay', 'd.wav'], stdout=subprocess.PIPE)
+	proc.communicate()
 
 if __name__ == '__main__':
 	main()
