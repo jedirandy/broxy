@@ -1,20 +1,5 @@
 #include "Cache.h"
 
-std::string policy_to_string(CachePolicy p) {
-	switch(p) {
-	case FIFO:
-		return "FIFO";
-	case LRU:
-		return "LRU";
-	case MAXS:
-		return "MAXS";
-	case RANDOM:
-		return "Random";
-	default:
-		return "N/A";
-	}
-}
-
 /*
  * Cache abstract class
  */
@@ -81,8 +66,9 @@ void Cache::debug_info(bool is_hit) {
 		cout << "Cache miss" << endl;
 	}
 }
+
 /*
- * FIFO Class
+ * FIFO Cache
  */
 FIFOCache::FIFOCache(size_t max_size) :
 		Cache(max_size) {
@@ -263,5 +249,23 @@ bool RandomCache::free(size_t input_size) {
 		list.erase(iter);
 	}
 	return true;
+}
+
+/**
+ * Utility functions
+ */
+std::string policy_to_string(CachePolicy p) {
+	switch(p) {
+	case FIFO:
+		return "FIFO";
+	case LRU:
+		return "LRU";
+	case MAXS:
+		return "MAXS";
+	case RANDOM:
+		return "Random";
+	default:
+		return "N/A";
+	}
 }
 
