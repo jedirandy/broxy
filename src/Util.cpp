@@ -4,12 +4,20 @@
  * Curl helper class
  */
 
+<<<<<<< .mine
+size_t cb(void *buffer, size_t size, size_t nmemb, void *userp) {
+	((std::string*) userp)->append((char*) buffer, size * nmemb);
+	return size * nmemb;
+}
+
+=======
 // Callback when a chunk is received
 size_t cb(void *buffer, size_t size, size_t nmemb, void *userp) {
 	((std::string*) userp)->append((char*) buffer, size * nmemb);
 	return size * nmemb;
 }
 
+>>>>>>> .r22
 Curl::Curl() {
 	this->curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);

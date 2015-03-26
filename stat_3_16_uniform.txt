@@ -1,0 +1,7 @@
+1.30323 ms
+hits/total: 900/1000
+hit rate: 0.900000
+number of cached elements: 100
+available/total size: 7183/16384 KBytes
+largest size item: about.com/
+

@@ -1,0 +1,7 @@
+0.943912 ms
+hits/total: 894/1000
+hit rate: 0.894000
+number of cached elements: 93
+available/total size: 332/6144 KBytes
+largest size item: qq.com/
+

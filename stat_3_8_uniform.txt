@@ -1,0 +1,7 @@
+0.889551 ms
+hits/total: 894/1000
+hit rate: 0.894000
+number of cached elements: 96
+available/total size: 425/8192 KBytes
+largest size item: guardian.co.uk/
+
