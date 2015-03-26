@@ -1,7 +1,0 @@
-1.22954 ms
-hits/total: 826/1000
-hit rate: 0.826000
-number of cached elements: 88
-available/total size: 422/6144 KBytes
-largest size item: digg.com/
-

@@ -1,7 +1,0 @@
-1.4081 ms
-hits/total: 817/1000
-hit rate: 0.817000
-number of cached elements: 75
-available/total size: 1/4096 KBytes
-largest size item: amazon.com/
-

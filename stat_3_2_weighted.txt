@@ -1,7 +1,0 @@
-1.21073 ms
-hits/total: 800/1000
-hit rate: 0.800000
-number of cached elements: 67
-available/total size: 263/2048 KBytes
-largest size item: reuters.com/
-

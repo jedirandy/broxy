@@ -1,6 +1,0 @@
-1.38976 ms
-hits/total: 900/1000
-hit rate: 0.900000
-number of cached elements: 100
-available/total size: 1666/12288 KBytes
-

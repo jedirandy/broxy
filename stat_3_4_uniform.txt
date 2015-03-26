@@ -1,7 +1,0 @@
-3.42163 ms
-hits/total: 815/1000
-hit rate: 0.815000
-number of cached elements: 88
-available/total size: 355/4096 KBytes
-largest size item: washingtonpost.com/
-
