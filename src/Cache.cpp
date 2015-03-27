@@ -52,11 +52,11 @@ size_t Cache::available() {
 
 std::string Cache::get_stats() {
 	return "hits/total: " + std::to_string(stats.hits) + "/"
-			+ std::to_string(stats.requests) + "\n"
-			+ "hit rate: " + std::to_string(stats.get_rate()) + "\n"
-			+ "number of cached elements: " + std::to_string(cache_map.size()) + "\n"
-			+ "available/total size: " + std::to_string(size/KB) + "/"
-			+ std::to_string(max_size/KB) + " KBytes\n";
+			+ std::to_string(stats.requests) + "\n" + "hit rate: "
+			+ std::to_string(stats.get_rate()) + "\n"
+			+ "number of cached elements: " + std::to_string(cache_map.size())
+			+ "\n" + "available/total size: " + std::to_string(size / KB) + "/"
+			+ std::to_string(max_size / KB) + " KBytes\n";
 }
 
 void Cache::debug_info(bool is_hit) {
@@ -97,7 +97,7 @@ std::string FIFOCache::fetch(const std::string& url) {
 }
 
 bool FIFOCache::free(size_t input_size) {
-	if (input_size > this->max_size)
+	if (input_size > this->max_size || input_size <= 0)
 		return false;
 	if (input_size < this->size) {
 		return true;
@@ -145,7 +145,7 @@ string LRUCache::fetch(const string& url) {
 }
 
 bool LRUCache::free(size_t input_size) {
-	if (input_size > this->max_size)
+	if (input_size > this->max_size || input_size <= 0)
 		return false;
 	if (input_size < this->size) {
 		return true;
@@ -188,7 +188,7 @@ std::string MAXSCache::fetch(const string& url) {
 }
 
 bool MAXSCache::free(size_t input_size) {
-	if (input_size > this->max_size)
+	if (input_size > this->max_size || input_size <= 0)
 		return false;
 	if (input_size < this->size) {
 		return true;
@@ -236,7 +236,7 @@ std::string RandomCache::fetch(const string& url) {
 }
 
 bool RandomCache::free(size_t input_size) {
-	if (input_size > this->max_size)
+	if (input_size > this->max_size || input_size <= 0)
 		return false;
 	if (input_size < this->size) {
 		return true;
@@ -255,7 +255,7 @@ bool RandomCache::free(size_t input_size) {
  * Utility functions
  */
 std::string policy_to_string(CachePolicy p) {
-	switch(p) {
+	switch (p) {
 	case FIFO:
 		return "FIFO";
 	case LRU:
