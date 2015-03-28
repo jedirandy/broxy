@@ -65,11 +65,11 @@ def run(program, host, input, output, num_samples, pattern):
 def main():
 	parser = argparse.ArgumentParser(description='script')
 	parser.add_argument('--host', dest='host', default='localhost', help='host')
-	parser.add_argument('--pattern', dest='pattern', default='uniform', help='requests pattern')
+	parser.add_argument('--pattern', dest='pattern', default='uniform', help='requests pattern: uniform, weighted, gauss')
 	parser.add_argument('--samples', dest='samples', default=100, help='number of samples', type=int)
 	parser.add_argument('--input', dest='input', help='input file')
 	parser.add_argument('--output', dest='output', help='output file')
-	parser.add_argument('--program', dest='program', default='../client', help='program path')
+	parser.add_argument('--program', dest='program', default='../client', help='client program path')
 	args = parser.parse_args()
 
 	print 'running'
